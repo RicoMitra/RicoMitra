@@ -8,17 +8,16 @@ import os
 import sys
 import urllib.request
 from collections import Counter
-from datetime import datetime, timezone
 from xml.sax.saxutils import escape
 
-ROLE = "Data Science undergraduate · Statistics, Brawijaya University"
+ROLE = "Data Science undergraduate · Brawijaya University"
 BG, BORDER, GREEN, TEXT, MUTED = "#0d1117", "#1f3b2c", "#39d353", "#e6edf3", "#8b949e"
 LEVELS = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"]
 FONT = "font-family=\"'Segoe UI',Ubuntu,'Helvetica Neue',sans-serif\""
 MONO = "font-family=\"'JetBrains Mono',Consolas,'SFMono-Regular',monospace\""
 
 QUERY = """
-query($login: String!, $from: DateTime!, $to: DateTime!) {
+query($login: String!) {
   user(login: $login) {
     name login
     followers { totalCount }
@@ -26,7 +25,7 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
       totalCount
       nodes { stargazerCount languages(first: 10) { edges { size node { name color } } } }
     }
-    contributionsCollection(from: $from, to: $to) {
+    contributionsCollection {
       contributionCalendar { totalContributions weeks { contributionDays { contributionCount date } } }
     }
   }
@@ -34,10 +33,7 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 
 
 def fetch(login, token):
-    now = datetime.now(timezone.utc)
-    start = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-    body = json.dumps({"query": QUERY, "variables": {
-        "login": login, "from": start.isoformat(), "to": now.isoformat()}}).encode()
+    body = json.dumps({"query": QUERY, "variables": {"login": login}}).encode()
     req = urllib.request.Request("https://api.github.com/graphql", body, {
         "Authorization": f"bearer {token}", "User-Agent": "profile-card"})
     with urllib.request.urlopen(req, timeout=30) as resp:
@@ -115,15 +111,14 @@ def profile_svg(s):
 
 
 def year_svg(s):
-    year = datetime.now(timezone.utc).year
     inner = "\n".join([
-        f'<text x="32" y="48" fill="{TEXT}" font-size="22" font-weight="700" {FONT}>The city I built in {year}</text>',
+        f'<text x="32" y="48" fill="{TEXT}" font-size="22" font-weight="700" {FONT}>The city I built in the last year</text>',
         f'<text x="32" y="86" fill="{GREEN}" font-size="13" letter-spacing="1.5" {MONO}>CONTRIBUTIONS</text>',
         f'<text x="32" y="128" fill="{TEXT}" font-size="40" font-weight="700" {MONO}>{s["total"]}</text>',
         f'<text x="32" y="160" fill="{MUTED}" font-size="14" {MONO}>{s["active"]} active days</text>',
         f'<text x="32" y="182" fill="{MUTED}" font-size="14" {MONO}>Busiest day: {s["busiest"]}</text>',
     ])
-    return frame(840, 205, inner, f"{year} contribution summary")
+    return frame(840, 205, inner, "Contributions in the last year")
 
 
 def selftest():

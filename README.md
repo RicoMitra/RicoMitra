@@ -2,7 +2,7 @@
 
 <img src="profile/profile.svg" alt="Rico Majesty Daniel Mitra — GitHub profile" width="100%" />
 
-<img src="profile/year.svg" alt="Contributions this year" width="100%" />
+<img src="profile/year.svg" alt="Contributions in the last year" width="100%" />
 <img src="profile-3d-contrib/profile-night-green.svg" alt="3D contribution city" width="100%" />
 
 <img src="profile/top-langs.svg" alt="Language Stack" width="100%" />
