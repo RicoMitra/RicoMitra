@@ -134,7 +134,7 @@
       
     <svg width="745" x="0" y="25">
       <rect data-testid="progress-background" class="progress-background" rx="5" ry="5" x="0" y="0" width="745" height="8"></rect>
-      <svg data-testid="lang-progress" width="98.5946811349284%">
+      <svg data-testid="lang-progress" width="98.59353381622853%">
         <rect
             height="8"
             fill="#3572A5"
